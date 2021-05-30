@@ -4,6 +4,8 @@ const app = express();
 
 const PORT = process.env.PORT;
 
+app.use(express.json());
+
 const authController = require('./controllers/authController');
 app.use('/api/v1/auth', authController);
 
