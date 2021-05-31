@@ -2,8 +2,15 @@ require('dotenv').config();
 const express = require('express');
 const app = express();
 const session = require('express-session');
+const cors = require('cors');
 
 const PORT = process.env.PORT;
+
+const corsOptions = {
+	origin: 'http://localhost:3000'
+};
+
+app.use(cors(corsOptions));
 
 app.use(
 	session({
