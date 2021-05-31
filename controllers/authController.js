@@ -73,6 +73,43 @@ router.post('/register', async (req, res) => {
 	}
 });
 
+router.post('/login', async (req, res, next) => {
+	try {
+		const userToLogIn = await prisma.user.findUnique({
+			where: {
+				email: req.body.email,
+			}
+		});
+		if (userToLogIn) {
+			const validPassword = bcrypt.compareSync(req.body.password, userToLogIn.password);
+			if (validPassword) {
+				delete userToLogIn.password;
+				req.session.loggedIn = true;
+				req.session.currentUser = userToLogIn;
+				const body = {
+					message: 'User successfully logged in',
+					data: userToLogIn,
+				};
+				res.status(200).json(body);
+			} else {
+				const body = {
+					message: "Invalid email or password",
+					data: {},
+				};
+				res.status(400).json(body);
+			}
+		} else {
+			const body = {
+				message: "Invalid email or password",
+				data: {},
+			};
+			res.status(400).json(body);
+		}
+	} catch (err) {
+		next(err);
+	}
+})
+
 router.get('/logout', async (req, res, next) => {
 	try {
 		await req.session.destroy();
