@@ -1,9 +1,16 @@
 require('dotenv').config();
 const express = require('express');
 const app = express();
+const session = require('express-session');
 
 const PORT = process.env.PORT;
 
+app.use(
+	session({
+		secret: process.env.SESSION_SECRET,
+		resave: false,
+		saveUninitialized: false,
+	}))
 app.use(express.json());
 
 const authController = require('./controllers/authController');
