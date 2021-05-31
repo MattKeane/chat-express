@@ -22,6 +22,7 @@ router.get('/currentUser', (req, res) => {
 		res.status(400).json(body);
 	}
 })
+
 router.post('/register', async (req, res) => {
 	try {
 		const emailExists = await prisma.user.findUnique({
@@ -71,5 +72,18 @@ router.post('/register', async (req, res) => {
 		res.status(400).json(body);
 	}
 });
+
+router.get('/logout', async (req, res, next) => {
+	try {
+		await req.session.destroy();
+		const body = {
+			message: 'User logged out',
+			data: {},
+		};
+		res.status(200).json(body);
+	} catch (err) {
+		next(err);
+	}
+})
 
 module.exports = router;
