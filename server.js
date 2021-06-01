@@ -4,7 +4,9 @@ const app = express();
 const session = require('express-session');
 const cors = require('cors');
 const server = require('http').createServer(app);
+
 const io = require('socket.io')(server, {
+	// sets up server with CORS enabled for localhost:3000
 	cors: {
 		origin: 'http://localhost:3000',
 		methods: ['GET', 'POST'],
@@ -14,6 +16,7 @@ const io = require('socket.io')(server, {
 
 const PORT = process.env.PORT;
 
+// sets up CORS enabled for localhost:3000 for all routes
 const corsOptions = {
 	origin: 'http://localhost:3000',
 	credentials: true,
@@ -21,6 +24,7 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 
+// sets up sessions
 app.use(
 	session({
 		secret: process.env.SESSION_SECRET,
@@ -29,6 +33,7 @@ app.use(
 	}))
 app.use(express.json());
 
+// sets up socket.io with global chat
 io.on('connection', socket => {
 	console.log('New client connected.');
 	socket.on('global', msg => {
@@ -39,6 +44,7 @@ io.on('connection', socket => {
 	});
 });
 
+// Importing and configuring controllers
 const authController = require('./controllers/authController');
 app.use('/api/v1/auth', authController);
 

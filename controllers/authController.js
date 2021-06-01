@@ -7,6 +7,7 @@ router.get('/', (req, res) => {
 	res.send('Auth controller works!');
 });
 
+// Get current user
 router.get('/currentUser', (req, res) => {
 	if (req.session.loggedIn) {
 		const body = {
@@ -23,6 +24,7 @@ router.get('/currentUser', (req, res) => {
 	}
 })
 
+// Register user
 router.post('/register', async (req, res) => {
 	try {
 		const emailExists = await prisma.user.findUnique({
@@ -73,6 +75,7 @@ router.post('/register', async (req, res) => {
 	}
 });
 
+// Login
 router.post('/login', async (req, res, next) => {
 	try {
 		const userToLogIn = await prisma.user.findUnique({
@@ -110,6 +113,7 @@ router.post('/login', async (req, res, next) => {
 	}
 })
 
+// Logout
 router.get('/logout', async (req, res, next) => {
 	try {
 		await req.session.destroy();
